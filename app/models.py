@@ -12,6 +12,22 @@ def to_str_id(obj: Any) -> Any:
         obj["_id"] = str(obj["_id"])
     return obj
 
+class Group(BaseModel):
+    """Модель группы пользователей"""
+    model_config = ConfigDict(extra="ignore")
+    
+    id: Optional[str] = Field(default=None, alias="_id")
+    name: str                           # Название группы (например, "7А класс")
+    description: str = ""               # Описание группы
+    user_ids: list[str] = []            # ID пользователей в группе
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_by: Optional[str] = None    # ID администратора, создавшего группу
+    
+    @field_validator("id", mode="before")
+    @classmethod
+    def _oid(cls, v: Any) -> Any:
+        return str(v) if isinstance(v, ObjectId) else v
+
 
 class User(BaseModel):
     model_config = ConfigDict(extra="ignore")
@@ -21,6 +37,7 @@ class User(BaseModel):
     full_name: str
     age_group: str
     roles: list[str] = ["user"]
+    groups: list[str] = []
     password_hash: str = ""
     is_active: bool = True
     created_at: datetime = Field(default_factory=datetime.utcnow)
@@ -41,6 +58,7 @@ class Task(BaseModel):
     topic: str
     task_type: str
     age_groups: list[str]
+    forbidden_groups: list[str] = []
     points: int = 10
     emoji: str = "🌟"
     color: str = "#7C4DFF"

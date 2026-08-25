@@ -16,6 +16,7 @@ class UserOut(BaseModel):
     full_name: str
     age_group: str
     roles: list[str]
+    groups: list[str]
     is_active: bool = True
     created_at: datetime
 
@@ -33,6 +34,7 @@ class UserCreate(BaseModel):
     password: str
     age_group: str = "junior"
     roles: list[str] = ["user"]
+    groups: list[str] = []
 
 
 class UserUpdate(BaseModel):
@@ -40,12 +42,34 @@ class UserUpdate(BaseModel):
     password: Optional[str] = None
     age_group: Optional[str] = None
     roles: Optional[list[str]] = None
+    groups: Optional[list[str]] = None
     is_active: Optional[bool] = None
 
 
 class ResetPassword(BaseModel):
     new_password: str
 
+# ---------- Groups ----------
+class GroupCreate(BaseModel):
+    name: str
+    description: str = ""
+    user_ids: list[str] = []
+
+
+class GroupUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    user_ids: Optional[list[str]] = None
+
+
+class GroupOut(BaseModel):
+    id: str
+    name: str
+    description: str
+    user_ids: list[str]
+    user_count: int = 0  # Количество участников
+    created_at: datetime
+    created_by: Optional[str] = None
 
 # ---------- Tasks ----------
 class TaskOut(BaseModel):
@@ -56,6 +80,7 @@ class TaskOut(BaseModel):
     topic: str
     task_type: str
     age_groups: list[str]
+    forbidden_groups: list[str] = []
     points: int
     emoji: str
     color: str

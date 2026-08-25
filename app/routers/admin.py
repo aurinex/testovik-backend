@@ -5,8 +5,9 @@ from .. import constants
 from ..database import results as results_col
 from ..database import tasks as tasks_col
 from ..database import users as users_col
+from ..database import groups as groups_col
 from ..dependencies import require_admin, require_full
-from ..models import Result, User
+from ..models import Result, Task, User, Group
 from ..schemas import (
     ResetPassword,
     ResultDetailedOut,
@@ -15,6 +16,7 @@ from ..schemas import (
     UserCreate,
     UserOut,
     UserUpdate,
+    TaskOut,
 )
 from ..security import hash_password
 
@@ -127,6 +129,7 @@ async def create_user(body: UserCreate, _: User = Depends(require_full)):
         full_name=body.full_name,
         age_group=body.age_group,
         roles=body.roles,
+        groups=body.groups or [],
         password_hash=hash_password(body.password),
     )
     inserted = await users_col.insert_one(user.model_dump(exclude={"id"}))
@@ -152,6 +155,8 @@ async def update_user(user_id: str, body: UserUpdate, _: User = Depends(require_
         update["roles"] = body.roles
     if body.is_active is not None:
         update["is_active"] = body.is_active
+    if body.groups is not None:
+        update["groups"] = body.groups
 
     if not update:
         raise HTTPException(status_code=400, detail="Нет данных для обновления")
@@ -180,3 +185,31 @@ async def reset_password(user_id: str, body: ResetPassword, _: User = Depends(re
     await users_col.update_one({"_id": ObjectId(user_id)}, {"$set": {"password_hash": hash_password(body.new_password)}})
     doc = await users_col.find_one({"_id": ObjectId(user_id)})
     return UserOut(**User(**doc).model_dump())
+
+@router.put("/tasks/{task_id}/groups", response_model=TaskOut)
+async def update_task_forbidden_groups(
+    task_id: str,
+    body: dict,  # {"forbidden_groups": ["group_id_1", "group_id_2"]}
+    _: User = Depends(require_full)
+):
+    """Обновить список групп, для которых задание запрещено"""
+    if not ObjectId.is_valid(task_id):
+        raise HTTPException(status_code=404, detail="Задание не найдено")
+    
+    forbidden_groups = body.get("forbidden_groups", [])
+    
+    # Проверяем, что группы существуют
+    for group_id in forbidden_groups:
+        if not ObjectId.is_valid(group_id):
+            raise HTTPException(status_code=400, detail=f"Неверный ID группы: {group_id}")
+        group = await groups_col.find_one({"_id": ObjectId(group_id)})
+        if not group:
+            raise HTTPException(status_code=404, detail=f"Группа {group_id} не найдена")
+    
+    await tasks_col.update_one(
+        {"_id": ObjectId(task_id)},
+        {"$set": {"forbidden_groups": forbidden_groups}}
+    )
+    
+    doc = await tasks_col.find_one({"_id": ObjectId(task_id)})
+    return TaskOut(**Task(**doc).model_dump())

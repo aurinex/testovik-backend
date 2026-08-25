@@ -21,6 +21,10 @@ TOPICS = {
     "passwords": "Пароли",
     "viruses": "Вирусы",
     "privacy": "Личные данные",
+    "safe": "Безопасные действия",
+    "programming": "Программирование",
+    "ai": "Искусственный интеллект",
+    "digital_literacy": "Цифровая грамотность",
 }
 
 TOPIC_EMOJI = {
@@ -29,6 +33,10 @@ TOPIC_EMOJI = {
     "passwords": "🔑",
     "viruses": "🦠",
     "privacy": "🔒",
+    "safe": "🛡️",
+    "programming": "💻",
+    "ai": "🤖",
+    "digital_literacy": "🧠",
 }
 
 # Типы заданий
@@ -38,6 +46,10 @@ TASK_QUIZ = "quiz"
 TASK_SORT = "sort"
 TASK_TRUE_FALSE = "true_false"
 TASK_SCENARIO = "scenario"
+TASK_CODE = "code"
+TASK_AI_PROMPT = "ai_prompt"
+TASK_DEBUG = "debug"
+TASK_ALGORITHM = "algorithm"
 
 TASK_TYPES = {
     TASK_DRAGDROP: "Перетаскивание",
@@ -46,4 +58,8 @@ TASK_TYPES = {
     TASK_SORT: "Сортировка по категориям",
     TASK_TRUE_FALSE: "Правда или ложь",
     TASK_SCENARIO: "Ситуация",
+    TASK_CODE: "Программирование",
+    TASK_AI_PROMPT: "Промптинг ИИ",
+    TASK_DEBUG: "Отладка кода",
+    TASK_ALGORITHM: "Алгоритмы",
 }

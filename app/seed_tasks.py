@@ -13,6 +13,7 @@ SEED_TASKS = [
         "emoji": "🎣",
         "color": "#FF7043",
         "order": 1,
+        "forbidden_groups": [],
         "content": {
             "sections": [
                 {"id": "safe", "label": "Безопасно", "emoji": "🟢"},
@@ -39,6 +40,7 @@ SEED_TASKS = [
         "emoji": "🕵️",
         "color": "#FF7043",
         "order": 2,
+        "forbidden_groups": [],
         "content": {
             "questions": [
                 {
@@ -89,6 +91,7 @@ SEED_TASKS = [
         "emoji": "🤖",
         "color": "#42A5F5",
         "order": 3,
+        "forbidden_groups": [],
         "content": {
             "sections": [
                 {"id": "kind", "label": "Добрые", "emoji": "😊"},
@@ -115,6 +118,7 @@ SEED_TASKS = [
         "emoji": "🦸",
         "color": "#42A5F5",
         "order": 4,
+        "forbidden_groups": [],
         "content": {
             "scenarios": [
                 {
@@ -156,6 +160,7 @@ SEED_TASKS = [
         "emoji": "🔑",
         "color": "#FFCA28",
         "order": 5,
+        "forbidden_groups": [],
         "content": {
             "sections": [
                 {"id": "strong", "label": "Сильный пароль", "emoji": "🔐"},
@@ -182,6 +187,7 @@ SEED_TASKS = [
         "emoji": "⚖️",
         "color": "#FFCA28",
         "order": 6,
+        "forbidden_groups": [],
         "content": {
             "statements": [
                 {
@@ -223,6 +229,7 @@ SEED_TASKS = [
         "emoji": "🦠",
         "color": "#66BB6A",
         "order": 7,
+        "forbidden_groups": [],
         "content": {
             "sections": [
                 {"id": "virus", "label": "Опасно!", "emoji": "☠️"},
@@ -248,6 +255,7 @@ SEED_TASKS = [
         "emoji": "🔬",
         "color": "#66BB6A",
         "order": 8,
+        "forbidden_groups": [],
         "content": {
             "questions": [
                 {
@@ -298,6 +306,7 @@ SEED_TASKS = [
         "emoji": "🔒",
         "color": "#AB47BC",
         "order": 9,
+        "forbidden_groups": [],
         "content": {
             "sections": [
                 {"id": "private", "label": "Личное — нельзя!", "emoji": "🙊"},
@@ -324,6 +333,7 @@ SEED_TASKS = [
         "emoji": "🤫",
         "color": "#AB47BC",
         "order": 10,
+        "forbidden_groups": [],
         "content": {
             "statements": [
                 {
@@ -364,6 +374,7 @@ SEED_TASKS = [
         "emoji": "🦸‍♂️",
         "color": "#AB47BC",
         "order": 11,
+        "forbidden_groups": [],
         "content": {
             "scenarios": [
                 {
@@ -405,6 +416,7 @@ SEED_TASKS = [
         "emoji": "🧭",
         "color": "#FF7043",
         "order": 12,
+        "forbidden_groups": [],
         "content": {
             "sections": [
                 {"id": "trust", "label": "Доверяю", "emoji": "👍"},
@@ -431,6 +443,7 @@ SEED_TASKS = [
         "emoji": "🥷",
         "color": "#FF7043",
         "order": 13,
+        "forbidden_groups": [],
         "content": {
             "scenarios": [
                 {
@@ -472,6 +485,7 @@ SEED_TASKS = [
         "emoji": "🧊",
         "color": "#7C4DFF",
         "order": 14,
+        "forbidden_groups": [],
         "content": {
             "sections": [
                 {"id": "phishing", "label": "Фишинг", "icon": "email"},
@@ -508,6 +522,7 @@ SEED_TASKS = [
         "emoji": "🔮",
         "color": "#EC407A",
         "order": 15,
+        "forbidden_groups": [],
         "content": {
             "sections": [
                 {"id": "phishing", "label": "Фишинг", "icon": "email"},

@@ -119,6 +119,63 @@ def score_scenario(content: dict, answers: list[dict]) -> tuple[int, int, list[d
         )
     return correct, total, details
 
+def score_code(content: dict, answers: list[dict]) -> tuple[int, int, list[dict]]:
+    # Проверяем, что код запустился успешно
+    code_result = next((a.get('value') for a in answers if a.get('key') == 'code_result'), False)
+    correct = 1 if code_result else 0
+    total = 1
+    details = [{
+        "expected": True,
+        "chosen": code_result,
+        "correct": correct == 1,
+    }]
+    return correct, total, details
+
+def score_ai_prompt(content: dict, answers: list[dict]) -> tuple[int, int, list[dict]]:
+    # Для промптинга пока просто проверяем, что ответ отправлен
+    has_response = any(a.get('key') == 'ai_response' for a in answers)
+    correct = 1 if has_response else 0
+    total = 1
+    details = [{
+        "expected": True,
+        "chosen": has_response,
+        "correct": correct == 1,
+    }]
+    return correct, total, details
+
+def score_debug(content: dict, answers: list[dict]) -> tuple[int, int, list[dict]]:
+    # Аналогично code
+    code_result = next((a.get('value') for a in answers if a.get('key') == 'debug_result'), False)
+    correct = 1 if code_result else 0
+    total = 1
+    details = [{
+        "expected": True,
+        "chosen": code_result,
+        "correct": correct == 1,
+    }]
+    return correct, total, details
+
+def score_algorithm(content: dict, answers: list[dict]) -> tuple[int, int, list[dict]]:
+    # Проверяем правильный порядок блоков
+    items = content.get('items', [])
+    total = len(items)
+    correct = 0
+    details = []
+    
+    for i, item in enumerate(items):
+        chosen = next((a.get('value') for a in answers if a.get('key') == item.get('id')), None)
+        ok = chosen == i  # Правильный порядок — индекс соответствует позиции
+        if ok:
+            correct += 1
+        details.append({
+            "item_id": item.get('id'),
+            "item_text": item.get('text'),
+            "expected": i,
+            "chosen": chosen,
+            "correct": ok,
+        })
+    
+    return correct, total, details
 
 def score_task(task_type: str, content: dict, answers: list[dict]) -> tuple[int, int, list[dict]]:
     answers = [a for a in answers if isinstance(a, dict)]
@@ -134,4 +191,13 @@ def score_task(task_type: str, content: dict, answers: list[dict]) -> tuple[int,
         return score_true_false(content, answers)
     if task_type == constants.TASK_SCENARIO:
         return score_scenario(content, answers)
+    if task_type == constants.TASK_CODE:
+        return score_code(content, answers)
+    if task_type == constants.TASK_AI_PROMPT:
+        return score_ai_prompt(content, answers)
+    if task_type == constants.TASK_DEBUG:
+        return score_debug(content, answers)
+    if task_type == constants.TASK_ALGORITHM:
+        return score_algorithm(content, answers)
     return 0, 0, []
+

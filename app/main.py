@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .database import ping
-from .routers import admin, auth, results, tasks
+from .routers import admin, auth, results, tasks, groups
 from .seed import seed_tasks_if_empty
 
 
@@ -35,6 +35,7 @@ app.include_router(auth.router)
 app.include_router(tasks.router)
 app.include_router(results.router)
 app.include_router(admin.router)
+app.include_router(groups.router)
 
 
 @app.get("/health")

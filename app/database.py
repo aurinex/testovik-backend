@@ -8,6 +8,7 @@ db = client[settings.DB_NAME]
 users = db.users
 tasks = db.tasks
 results = db.results
+groups = db.groups
 
 
 async def ping() -> None:
