@@ -56,3 +56,17 @@ def is_full(user: User) -> bool:
 
 def get_optional_user(user: Optional[User] = None) -> Optional[User]:
     return user
+
+def require_execution_access(user: User = Depends(get_current_user)) -> User:
+    """Проверяет, имеет ли пользователь доступ к выполнению кода"""
+    # Доступно всем активным пользователям
+    if not user.is_active:
+        raise HTTPException(status_code=403, detail="Аккаунт отключён")
+    return user
+
+# Или можно ограничить по возрасту:
+def require_programming_access(user: User = Depends(get_current_user)) -> User:
+    """Только для средней и старшей группы"""
+    if user.age_group not in [constants.AGE_MIDDLE, constants.AGE_SENIOR]:
+        raise HTTPException(status_code=403, detail="Доступно только для 9-14 лет")
+    return user

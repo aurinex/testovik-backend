@@ -1,14 +1,19 @@
-FROM python:3.13-slim
+FROM python:3.11-slim
 
 WORKDIR /app
 
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
-
+# Устанавливаем зависимости
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Копируем код
 COPY . .
+
+# Создаём пользователя без прав
+RUN useradd -m -u 1001 runner && \
+    chown -R runner:runner /app
+
+USER runner
 
 EXPOSE 8000
 

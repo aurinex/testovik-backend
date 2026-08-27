@@ -1,8 +1,8 @@
 """Скрипт создания админ-аккаунта.
 
 Примеры:
-    python -m app.create_admin                       # admin / admin123 (роль admin)
-    python -m app.create_admin --username boss \
+    python -m app.scripts.create_admin                       # admin / admin123 (роль admin)
+    python -m app.scripts.create_admin --username boss \
         --password secret --full                     # admin + full (полное управление)
 """
 
@@ -10,10 +10,10 @@ import argparse
 import asyncio
 import getpass
 
-from . import constants
-from .database import users
-from .models import User
-from .security import hash_password
+from .. import constants
+from ..database import users
+from ..models import User
+from ..security import hash_password
 
 
 async def create(username: str, password: str, full: bool) -> None:

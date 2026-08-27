@@ -3,7 +3,7 @@ from typing import List
 from bson import ObjectId
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from ..database import groups as groups_col, users as users_col
+from ..database import groups as groups_col, users as users_col, tasks as tasks_col
 from ..dependencies import require_admin
 from ..models import Group, User
 from ..schemas import GroupCreate, GroupOut, GroupUpdate
@@ -167,10 +167,10 @@ async def delete_group(group_id: str, _: User = Depends(require_admin)):
             {"$pull": {"groups": group_id}}
         )
     
-    # Удаляем группу из заданий
+    # ✅ Исправлено: forbidden_groups вместо allowed_groups
     await tasks_col.update_many(
-        {"allowed_groups": group_id},
-        {"$pull": {"allowed_groups": group_id}}
+        {"forbidden_groups": group_id},
+        {"$pull": {"forbidden_groups": group_id}}
     )
     
     # Удаляем саму группу

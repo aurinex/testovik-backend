@@ -23,6 +23,8 @@ TOPICS = {
     "privacy": "Личные данные",
     "safe": "Безопасные действия",
     "programming": "Программирование",
+    "python": "Python",
+    "lua": "Lua",
     "ai": "Искусственный интеллект",
     "digital_literacy": "Цифровая грамотность",
 }
@@ -35,6 +37,8 @@ TOPIC_EMOJI = {
     "privacy": "🔒",
     "safe": "🛡️",
     "programming": "💻",
+    "python": "🐍",
+    "lua": "⛏️",
     "ai": "🤖",
     "digital_literacy": "🧠",
 }
