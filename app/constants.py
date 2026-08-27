@@ -26,7 +26,7 @@ TOPICS = {
     "python": "Python",
     "lua": "Lua",
     "ai": "Искусственный интеллект",
-    "digital_literacy": "Цифровая грамотность",
+    "logic": "Логика и алгоритмы",
 }
 
 TOPIC_EMOJI = {
@@ -40,7 +40,7 @@ TOPIC_EMOJI = {
     "python": "🐍",
     "lua": "⛏️",
     "ai": "🤖",
-    "digital_literacy": "🧠",
+    "logic": "🧠",
 }
 
 # Типы заданий

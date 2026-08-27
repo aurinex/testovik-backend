@@ -115,6 +115,7 @@ class ResultOut(BaseModel):
     correct_count: int
     total_count: int
     completed_at: datetime
+    score_added: int = 0
 
 
 class ResultDetailedOut(ResultOut):
@@ -139,3 +140,11 @@ class StatsOut(BaseModel):
     by_age_group: dict[str, int]
     by_topic: list[TopicStat]
     hardest_tasks: list[dict] = []
+
+# ---------- AI ----------
+class AIPromptResponse(BaseModel):
+    response: str
+    success: bool
+    match_percentage: int = 0
+    matched_words: list[str] = []
+    error: Optional[str] = None

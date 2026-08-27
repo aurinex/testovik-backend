@@ -21,10 +21,28 @@ async def submit_result(body: ResultSubmit, user: User = Depends(get_current_use
 
     task = Task(**doc)
     raw_answers = [a.payload for a in body.answers]
+    print(f"[RESULTS] raw_answers: {raw_answers}")
     correct, total, details = score_task(task.task_type, task.content, raw_answers)
+
+    print(f"[RESULTS] correct={correct}, total={total}, details={details}")
 
     max_score = task.points
     score = round(max_score * (correct / total)) if total else 0
+
+    # 🆕 Проверяем, есть ли уже результат у пользователя
+    existing_result = await results_col.find_one({
+        "user_id": str(user.id),
+        "task_id": str(task.id)
+    })
+    
+    # 🆕 Если есть — считаем разницу
+    score_to_add = score
+    if existing_result:
+        old_score = existing_result.get("score", 0)
+        if score > old_score:
+            score_to_add = score - old_score  # Добавляем только разницу
+        else:
+            score_to_add = 0  # Не добавляем, если результат хуже
 
     result = Result(
         user_id=str(user.id),
@@ -32,15 +50,29 @@ async def submit_result(body: ResultSubmit, user: User = Depends(get_current_use
         task_title=task.title,
         task_type=task.task_type,
         topic=task.topic,
-        score=score,
+        score=score,  # Сохраняем полный балл
         max_score=max_score,
         correct_count=correct,
         total_count=total,
         answers=details,
     )
-    inserted = await results_col.insert_one(result.model_dump(exclude={"id"}))
-    result.id = str(inserted.inserted_id)
-    return ResultOut(**result.model_dump())
+    
+    # 🆕 Обновляем или вставляем
+    if existing_result:
+        await results_col.update_one(
+            {"_id": existing_result["_id"]},
+            {"$set": result.model_dump(exclude={"id"})}
+        )
+        result.id = str(existing_result["_id"])
+    else:
+        inserted = await results_col.insert_one(result.model_dump(exclude={"id"}))
+        result.id = str(inserted.inserted_id)
+    
+    # 🆕 Возвращаем результат с информацией о добавленных очках
+    return ResultOut(
+        **result.model_dump(),
+        score_added=score_to_add  # 🆕 сколько очков добавлено
+    )
 
 
 @router.get("/me", response_model=list[ResultOut])

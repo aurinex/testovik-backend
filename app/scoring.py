@@ -132,15 +132,69 @@ def score_code(content: dict, answers: list[dict]) -> tuple[int, int, list[dict]
     return correct, total, details
 
 def score_ai_prompt(content: dict, answers: list[dict]) -> tuple[int, int, list[dict]]:
-    # Для промптинга пока просто проверяем, что ответ отправлен
-    has_response = any(a.get('key') == 'ai_response' for a in answers)
-    correct = 1 if has_response else 0
-    total = 1
+    """
+    Оценивает AI-промпт на основе совпадений с ключевыми словами
+    """
+    # 🔧 Отладка
+    print(f"[SCORING] Получены answers: {answers}")
+    
+    # Получаем процент совпадений из ответа
+    match_percentage = 0
+    matched_words = []
+    
+    for a in answers:
+        key = a.get('key')
+        value = a.get('value')
+        print(f"[SCORING] a: key={key}, value={value}, type={type(value)}")
+        
+        if key == 'ai_match_percentage':
+            if isinstance(value, (int, float)):
+                match_percentage = int(value)
+            elif isinstance(value, str):
+                try:
+                    match_percentage = int(value)
+                except:
+                    match_percentage = 0
+            print(f"[SCORING] match_percentage = {match_percentage}")
+            
+        if key == 'ai_matched_words':
+            if isinstance(value, list):
+                matched_words = value
+            elif isinstance(value, str):
+                try:
+                    import ast
+                    matched_words = ast.literal_eval(value) if value else []
+                except:
+                    matched_words = [value] if value else []
+            print(f"[SCORING] matched_words = {matched_words}")
+    
+    # 🔧 ПОРОГИ ДЛЯ ЗВЁЗД (более щадящие)
+    # 0-20% → 0 звёзд, 21-40% → 1 звезда, 41-70% → 2 звезды, 71-100% → 3 звезды
+    if match_percentage >= 71:
+        correct = 3
+        stars_text = "⭐⭐⭐"
+    elif match_percentage >= 41:
+        correct = 2
+        stars_text = "⭐⭐"
+    elif match_percentage >= 21:
+        correct = 1
+        stars_text = "⭐"
+    else:
+        correct = 0
+        stars_text = "☆"
+    
+    print(f"[SCORING] Итог: match_percentage={match_percentage}, correct={correct}")
+    
+    total = 3
+    
     details = [{
-        "expected": True,
-        "chosen": has_response,
-        "correct": correct == 1,
+        "match_percentage": match_percentage,
+        "matched_words": matched_words[:5] if matched_words else [],
+        "correct": correct,
+        "expected": f"Найдено ключевых слов: {match_percentage}%",
+        "chosen": f"{stars_text} {match_percentage}% — найдено: {', '.join(matched_words[:3]) if matched_words else 'нет совпадений'}"
     }]
+    
     return correct, total, details
 
 def score_debug(content: dict, answers: list[dict]) -> tuple[int, int, list[dict]]:
