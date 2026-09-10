@@ -64,6 +64,7 @@ class Task(BaseModel):
     color: str = "#7C4DFF"
     order: int = 0
     content: dict[str, Any] = {}
+    is_enabled: bool = True
 
     @field_validator("id", mode="before")
     @classmethod

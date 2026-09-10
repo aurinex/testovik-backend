@@ -20,6 +20,8 @@ async def list_tasks(user: User = Depends(get_current_user)):
     if constants.ROLE_ADMIN in user.roles:
         tasks = await tasks_col.find().sort("order", 1).to_list(1000)
         return [_task_out(Task(**t)) for t in tasks]
+
+    enabled_filter = {"$or": [{"is_enabled": True}, {"is_enabled": {"$exists": False}}]}
     
     # Фильтр по возрастной группе
     age_filter = {"age_groups": user.age_group}
@@ -35,7 +37,7 @@ async def list_tasks(user: User = Depends(get_current_user)):
     else:
         group_filter = {}
     
-    query = {"$and": [age_filter, group_filter]}
+    query = {"$and": [age_filter, group_filter, enabled_filter]}
     
     tasks = await tasks_col.find(query).sort("order", 1).to_list(1000)
     return [_task_out(Task(**t)) for t in tasks]

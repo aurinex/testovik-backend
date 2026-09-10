@@ -28,6 +28,8 @@ TOPICS = {
     "ai": "Искусственный интеллект",
     "logic": "Логика и алгоритмы",
     "gaming_scams": "Игровые мошенничества",
+    "safety_test": "Это нормально или опасно?",
+    "cyber_hero_test": "Тест-игра: кибергерой",
 }
 
 TOPIC_EMOJI = {
@@ -43,6 +45,8 @@ TOPIC_EMOJI = {
     "ai": "🤖",
     "logic": "🧠",
     "gaming_scams": "🎮",
+    "safety_test": "🎯",
+    "cyber_hero_test": "🦸"
 }
 
 # Типы заданий

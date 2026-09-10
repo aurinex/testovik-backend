@@ -85,6 +85,7 @@ class TaskOut(BaseModel):
     emoji: str
     color: str
     order: int
+    is_enabled: bool = True
 
 
 class TaskFullOut(TaskOut):

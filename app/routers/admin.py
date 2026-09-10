@@ -213,3 +213,28 @@ async def update_task_forbidden_groups(
     
     doc = await tasks_col.find_one({"_id": ObjectId(task_id)})
     return TaskOut(**Task(**doc).model_dump())
+
+@router.patch("/tasks/{task_id}/toggle", response_model=TaskOut)
+async def toggle_task_enabled(
+    task_id: str,
+    _: User = Depends(require_full)
+):
+    """Включить/выключить задание"""
+    if not ObjectId.is_valid(task_id):
+        raise HTTPException(status_code=404, detail="Задание не найдено")
+    
+    doc = await tasks_col.find_one({"_id": ObjectId(task_id)})
+    if not doc:
+        raise HTTPException(status_code=404, detail="Задание не найдено")
+    
+    # 🆕 Инвертируем is_enabled
+    current = doc.get("is_enabled", True)
+    new_value = not current
+    
+    await tasks_col.update_one(
+        {"_id": ObjectId(task_id)},
+        {"$set": {"is_enabled": new_value}}
+    )
+    
+    doc = await tasks_col.find_one({"_id": ObjectId(task_id)})
+    return TaskOut(**Task(**doc).model_dump())
