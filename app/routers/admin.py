@@ -6,6 +6,7 @@ from ..database import results as results_col
 from ..database import tasks as tasks_col
 from ..database import users as users_col
 from ..database import groups as groups_col
+from ..database import quests as quests_col
 from ..dependencies import require_admin, require_full
 from ..models import Result, Task, User, Group
 from ..schemas import (
@@ -238,3 +239,22 @@ async def toggle_task_enabled(
     
     doc = await tasks_col.find_one({"_id": ObjectId(task_id)})
     return TaskOut(**Task(**doc).model_dump())
+
+@router.get("/quests/stats")
+async def get_quest_stats(_: User = Depends(require_admin)):
+    pipeline = [
+        {"$group": {
+            "_id": "$quest_id",
+            "total_completed": {"$sum": 1},
+            "avg_score": {"$avg": "$score"},
+        }}
+    ]
+    docs = await quests_col.aggregate(pipeline).to_list(100)
+    return [
+        {
+            "quest_id": d["_id"],
+            "total_completed": d["total_completed"],
+            "avg_score": round(d["avg_score"] or 0),
+        }
+        for d in docs
+    ]

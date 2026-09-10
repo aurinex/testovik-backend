@@ -9,6 +9,7 @@ users = db.users
 tasks = db.tasks
 results = db.results
 groups = db.groups
+quests = db.quests
 
 
 async def ping() -> None:

@@ -92,3 +92,19 @@ class Result(BaseModel):
     @classmethod
     def _oid(cls, v: Any) -> Any:
         return str(v) if isinstance(v, ObjectId) else v
+
+class QuestProgress(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    id: Optional[str] = Field(default=None, alias="_id")
+    user_id: str
+    quest_id: str = "alex"
+    scenes: dict[str, bool] = {}
+    score: int = 0
+    completed_at: Optional[datetime] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+    @field_validator("id", mode="before")
+    @classmethod
+    def _oid(cls, v: Any) -> Any:
+        return str(v) if isinstance(v, ObjectId) else v

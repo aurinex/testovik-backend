@@ -149,3 +149,16 @@ class AIPromptResponse(BaseModel):
     match_percentage: int = 0
     matched_words: list[str] = []
     error: Optional[str] = None
+
+# ---------- Quests ----------
+
+class QuestProgressIn(BaseModel):
+    progress: dict[str, bool]
+    score: int = 0
+
+class QuestProgressOut(BaseModel):
+    user_id: str
+    quest_id: str
+    scenes: dict[str, bool]
+    score: int
+    completed_at: Optional[datetime] = None
